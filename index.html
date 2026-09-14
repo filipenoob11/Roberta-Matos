@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe — MVP Site</title>
+<style>
+  :root{
+    --bg:#ffffff;
+    --ink:#111111;
+    --muted:#555555;
+    --line:#cccccc;
+    --panel:#eeeeee;
+    --panel-dark:#211c1a;
+    --accent:#b56a4d;
+    --serif: Georgia, 'Times New Roman', serif;
+    --sans: Arial, Helvetica, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: var(--sans);
+    color:var(--muted);
+    background:var(--bg);
+    line-height:1.5;
+  }
+  h1,h2,h3{font-family:var(--serif);color:#555555;font-weight:normal;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px;}
+  a{color:inherit;}
+
+  /* placeholder blocks */
+  .ph{
+    background:var(--panel);
+    border:1px dashed var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--muted);
+    font-size:13px;
+    text-align:center;
+  }
+
+  header{
+    border-bottom:1px solid var(--line);
+    position:fixed;top:0;left:0;right:0;background:var(--bg);z-index:100;
+    transform:translateY(-100%);
+    opacity:0;
+    transition:transform .45s cubic-bezier(.22,.61,.36,1), opacity .4s ease;
+  }
+  header.visible{transform:translateY(0);opacity:1;}
+  .header-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 24px;max-width:960px;margin:0 auto;
+  }
+  .logo-ph{width:140px;height:36px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand img{display:block;}
+  .brand-logo{height:40px;width:auto;}
+  .brand-wordmark{height:28px;width:auto;}
+
+  .pre-hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+    padding:56px 24px;
+  }
+  .pre-hero-logo{height:96px;width:auto;display:block;margin:0 auto 20px;}
+  .wordmark-html{display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .wordmark-name{font-family:var(--serif);font-size:34px;letter-spacing:6px;margin:0;color:var(--muted);}
+  .wordmark-role{display:flex;align-items:center;gap:16px;}
+  .wordmark-role span{font-size:13px;letter-spacing:4px;color:var(--accent);}
+  .wordmark-role::before,.wordmark-role::after{content:"";width:48px;height:1px;background:var(--accent);}
+  .wordmark-tagline{font-size:11px;letter-spacing:2px;color:var(--muted);margin:0;}
+  .cta-square{
+    display:inline-block;
+    margin-top:28px;
+    padding:16px 28px;
+    background:#fff;
+    border:1px solid var(--accent);
+    color:var(--accent);
+    font-size:13px;
+    letter-spacing:4px;
+    text-decoration:none;
+  }
+  nav ul{list-style:none;display:flex;gap:24px;margin:0;padding:0;}
+  nav a{font-size:14px;text-decoration:none;color:var(--ink);}
+  .btn{
+    display:inline-block;
+    padding:12px 24px;
+    background:var(--accent);
+    color:#fff;
+    text-decoration:none;
+    font-size:13px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    border:1px solid var(--accent);
+  }
+  .btn-outline{background:transparent;color:var(--accent);}
+
+  section{padding:64px 0;border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+  h1{font-size:40px;margin:0 0 16px;max-width:600px;}
+  h2{font-size:28px;margin:0 0 16px;}
+  p{color:var(--muted);max-width:620px;}
+
+  /* hero */
+  .hero{padding-top:72px;}
+  .hero-grid{display:flex;gap:40px;flex-wrap:wrap;align-items:center;}
+  .hero-text{flex:1;min-width:280px;}
+  .hero-tags{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+  .tag{font-size:12px;border:1px solid var(--accent);padding:6px 12px;color:var(--accent);letter-spacing:.5px;}
+  .hero-imgs{flex:1;min-width:260px;display:flex;gap:12px;}
+  .hero-imgs .ph{flex:1;height:320px;}
+  .hero-imgs img{flex:1;height:320px;width:50%;object-fit:cover;border:1px solid var(--line);}
+  .cta-group{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;}
+
+  /* about */
+  .about-grid{display:flex;gap:48px;flex-wrap:wrap;}
+  .about-text{flex:1;min-width:280px;}
+  .about-list{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-wrap:wrap;gap:10px;}
+  .about-list li{font-size:13px;border:1px solid var(--accent);padding:6px 12px;color:var(--accent);}
+  .about-imgs{flex:1;min-width:260px;}
+  .about-imgs .ph{height:360px;}
+  .about-imgs img{height:360px;border:1px solid var(--line);}
+
+  /* gallery */
+  .gallery-strip{display:flex;gap:12px;overflow:hidden;}
+  .gallery-strip .ph{flex:0 0 160px;height:200px;}
+
+  /* servicos */
+  .service-card{
+    border:1px solid var(--line);
+    padding:32px;
+    flex:1;
+    min-width:260px;
+  }
+  .service-card .ph{height:1px;margin-bottom:0;border:none;background:none;} /* not used, placeholder cleanup */
+
+  /* saude mental section (dark panel) */
+  .panel-dark{background:var(--panel-dark);border-bottom-color:var(--panel-dark);}
+  .panel-dark .wrap{max-width:720px;}
+  .panel-dark .eyebrow{color:var(--accent);}
+  .panel-dark h2,.panel-dark h3{color:#f5f0ed;}
+  .panel-dark p{color:#c9c0bb;}
+  .panel-dark strong{color:#f5f0ed !important;}
+  .panel-dark table td{color:#c9c0bb;border-color:#4a423e !important;}
+  .panel-dark table td:last-child{color:#f5f0ed;}
+
+  /* como funciona - steps */
+  .steps{display:flex;gap:24px;flex-wrap:wrap;}
+  .step{flex:1;min-width:220px;border-top:2px solid var(--accent);padding-top:16px;}
+  .step-num{font-size:13px;color:var(--accent);letter-spacing:2px;margin-bottom:8px;display:block;}
+
+  /* checklist */
+  .checklist{display:grid;grid-template-columns:1fr 1fr;gap:16px 32px;list-style:none;padding:0;margin:24px 0 0;}
+  .checklist li{display:flex;gap:10px;font-size:15px;color:var(--muted);}
+  .checklist li::before{content:"✓";color:var(--accent);flex-shrink:0;}
+
+  /* abordagem */
+  .approach-list{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px;}
+  .approach-item{border:1px solid var(--line);padding:16px 20px;font-size:14px;flex:1;min-width:180px;}
+
+  /* faq */
+  .faq-item{border-bottom:1px solid var(--line);padding:18px 0;}
+  .faq-item:first-child{border-top:1px solid var(--line);}
+  .faq-q{display:flex;justify-content:space-between;align-items:center;font-size:16px;cursor:pointer;}
+  .faq-a{color:var(--muted);font-size:14px;margin-top:10px;max-width:640px;display:none;}
+  .faq-item.open .faq-a{display:block;}
+
+  /* final cta */
+  .final-cta{text-align:center;}
+  .final-cta .wrap{max-width:560px;}
+  .final-cta p{margin:0 auto 28px;}
+
+  footer{padding:40px 0;}
+  .footer-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;font-size:13px;color:var(--muted);}
+  .footer-links{display:flex;gap:16px;list-style:none;padding:0;margin:0;}
+
+  @media (max-width:640px){
+    nav ul{display:none;}
+    h1{font-size:30px;}
+  }
+
+  /* scroll reveal */
+  .reveal{
+    opacity:0;
+    transform:translateY(32px);
+    transition:opacity .7s ease, transform .7s cubic-bezier(.22,.61,.36,1);
+    transition-delay:var(--reveal-delay, 0s);
+  }
+  .reveal.is-visible{opacity:1;transform:translateY(0);}
+  .service-card.reveal:nth-child(1),.step.reveal:nth-child(1){--reveal-delay:0s;}
+  .service-card.reveal:nth-child(2),.step.reveal:nth-child(2){--reveal-delay:.12s;}
+  .service-card.reveal:nth-child(3),.step.reveal:nth-child(3){--reveal-delay:.24s;}
+  .service-card.reveal:nth-child(4),.step.reveal:nth-child(4){--reveal-delay:.36s;}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    header{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header id="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <img class="brand-logo" src="img/logo1png.png" alt="Roberta Matos - símbolo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#servicos">Atendimento</a></li>
+        <li><a href="#como-funciona">Como funciona</a></li>
+        <li><a href="#faq">Dúvidas</a></li>
+      </ul>
+    </nav>
+    <a href="#cta-final" class="btn">Agendar consulta</a>
+  </div>
+</header>
+
+<!-- PRE-HERO -->
+<section class="pre-hero">
+  <div class="wrap">
+    <img class="pre-hero-logo" src="img/logo1png.png" alt="Roberta Matos - símbolo">
+    <div class="wordmark-html">
+      <p class="wordmark-name">ROBERTA MATOS</p>
+      <div class="wordmark-role"><span>PSICÓLOGA</span></div>
+      <p class="wordmark-tagline">CUIDAR DA MENTE É TRANSFORMAR A VIDA.</p>
+      <a href="#" id="pre-hero-cta" class="cta-square">VAMOS CONVERSAR</a>
+    </div>
+  </div>
+</section>
+
+<!-- HERO -->
+<section class="hero reveal">
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <div class="eyebrow">Psicologia · Acolhimento · Autoconhecimento</div>
+      <h1>Cuidar da mente também é uma forma de cuidar da vida.</h1>
+      <p>Nem sempre é fácil entender o que estamos sentindo, organizar os pensamentos ou encontrar novos caminhos diante das mudanças da vida.</p>
+      <p>A psicoterapia pode ser um espaço de escuta, acolhimento e reflexão para compreender o que você vive hoje e construir, com mais consciência, uma relação mais saudável consigo mesmo.</p>
+      <div class="cta-group">
+        <a href="#cta-final" class="btn">Agendar uma conversa</a>
+        <a href="#sobre" class="btn btn-outline">Conheça a Roberta</a>
+      </div>
+      <div class="hero-tags">
+        <span class="tag">Ansiedade</span>
+        <span class="tag">Autoconhecimento</span>
+        <span class="tag">Relacionamentos</span>
+      </div>
+    </div>
+    <div class="hero-imgs">
+      <img src="img/home_img01.jpg" alt="Roberta Matos">
+      <img src="img/home_img02.png" alt="Roberta Matos">
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre" class="reveal">
+  <div class="wrap about-grid">
+    <div class="about-text">
+      <div class="eyebrow">Sobre Roberta Matos</div>
+      <h2>Um espaço para você se escutar com mais atenção.</h2>
+      <p>A psicoterapia começa muito antes de encontrar respostas. Ela começa quando existe espaço para fazer perguntas, reconhecer sentimentos e olhar para a própria história com mais cuidado.</p>
+      <p>Meu trabalho parte da escuta atenta e do respeito à singularidade de cada pessoa, porque cada trajetória carrega experiências, relações e desafios que precisam ser compreendidos dentro do seu próprio contexto.</p>
+      <p>Ao longo do processo terapêutico, buscamos compreender padrões, emoções e situações que podem estar impactando a forma como você se relaciona consigo, com os outros e com a vida.</p>
+      <p>Mais do que oferecer respostas prontas, a terapia é um espaço para construir novas possibilidades.</p>
+      <ul class="about-list">
+        <li>Escuta sem julgamentos</li>
+        <li>Acolhimento individualizado</li>
+        <li>Autoconhecimento</li>
+        <li>Cuidado emocional</li>
+      </ul>
+      <div style="margin-top:32px;">
+        <div class="eyebrow">Formação e trajetória</div>
+        <p><em>[Inserir formação acadêmica, especializações, cursos relevantes, registro profissional e trajetória clínica da Roberta.]</em></p>
+      </div>
+    </div>
+    <div class="about-imgs">
+      <img src="img/foto_perfil01.png" alt="Roberta Matos" style="width:100%;height:100%;object-fit:cover;display:block;">
+    </div>
+  </div>
+</section>
+
+<!-- GALERIA -->
+<section class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Lorem ipsum</div>
+    <h2>Dolor sit amet consectetur adipiscing</h2>
+    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.</p>
+  </div>
+  <div class="wrap" style="margin-top:24px;">
+    <div class="gallery-strip">
+      <div class="ph">img</div>
+      <div class="ph">img</div>
+      <div class="ph">img</div>
+      <div class="ph">img</div>
+      <div class="ph">img</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section id="servicos" class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Atendimento</div>
+    <h2>Alguns momentos da vida pedem um espaço para respirar, compreender e recomeçar.</h2>
+    <p>A terapia pode ser importante tanto quando existe um sofrimento que precisa ser cuidado quanto quando você sente que deseja se compreender melhor.</p>
+    <p>Alguns dos temas que podem ser trabalhados em psicoterapia incluem:</p>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;margin-top:24px;">
+      <div class="service-card reveal">
+        <h3 style="margin-top:0;">Ansiedade e excesso de preocupações</h3>
+        <p style="max-width:none;">Quando a mente parece estar sempre antecipando problemas, o corpo permanece em alerta e até situações simples começam a parecer difíceis.</p>
+        <p style="max-width:none;">A terapia pode ajudar a compreender esses padrões e desenvolver formas mais saudáveis de lidar com pensamentos, emoções e situações do cotidiano.</p>
+      </div>
+      <div class="service-card reveal">
+        <h3 style="margin-top:0;">Autoconhecimento</h3>
+        <p style="max-width:none;">Entender melhor quem você é, o que sente, o que deseja e quais padrões têm influenciado suas escolhas pode transformar a maneira como você se relaciona consigo e com o mundo.</p>
+      </div>
+      <div class="service-card reveal">
+        <h3 style="margin-top:0;">Relacionamentos</h3>
+        <p style="max-width:none;">Dificuldades de comunicação, conflitos, limites, dependência emocional ou padrões que se repetem nas relações podem ser trabalhados dentro de um espaço seguro de reflexão.</p>
+      </div>
+      <div class="service-card reveal">
+        <h3 style="margin-top:0;">Momentos de mudança</h3>
+        <p style="max-width:none;">Mudanças profissionais, familiares, afetivas ou pessoais podem trazer insegurança e dúvidas.</p>
+        <p style="max-width:none;">A terapia pode ajudar a atravessar esses períodos com mais clareza e consciência.</p>
+      </div>
+    </div>
+    <a href="#cta-final" class="btn" style="margin-top:28px;display:inline-block;">Quero conversar sobre isso</a>
+  </div>
+</section>
+
+<!-- BLOCO DE DESTAQUE (dark panel) -->
+<section class="panel-dark reveal">
+  <div class="wrap">
+    <div class="eyebrow">Saúde mental</div>
+    <h2>Cuidar da saúde mental não deveria ser o último recurso.</h2>
+    <p>A saúde mental faz parte da nossa saúde como um todo. Ela influencia a maneira como pensamos, sentimos, nos relacionamos e enfrentamos os desafios da vida.</p>
+    <p>E os números ajudam a dimensionar a importância desse cuidado.</p>
+    <p>Em 2021, quase 1 em cada 7 pessoas no mundo vivia com algum transtorno mental, segundo a Organização Mundial da Saúde. Isso representa aproximadamente 1,1 bilhão de pessoas.</p>
+    <p>Os transtornos de ansiedade estavam entre os mais comuns, afetando aproximadamente 359 milhões de pessoas em 2021.</p>
+
+    <div style="display:flex;gap:32px;flex-wrap:wrap;margin:32px 0;">
+      <div>
+        <div style="font-family:var(--serif);font-size:28px;color:var(--accent);">1,1 bilhão</div>
+        <div style="font-size:13px;color:#9a9088;">pessoas viviam com algum transtorno mental em 2021</div>
+      </div>
+      <div>
+        <div style="font-family:var(--serif);font-size:28px;color:var(--accent);">359 milhões</div>
+        <div style="font-size:13px;color:#9a9088;">pessoas viviam com transtornos de ansiedade em 2021</div>
+      </div>
+      <div>
+        <div style="font-family:var(--serif);font-size:28px;color:var(--accent);">1 em 7</div>
+        <div style="font-size:13px;color:#9a9088;">pessoas no mundo</div>
+      </div>
+    </div>
+
+    <div style="margin:32px 0;">
+      <h3 style="margin:0 0 12px;font-size:18px;">A dimensão global dos transtornos mentais</h3>
+      <table style="width:100%;max-width:520px;border-collapse:collapse;font-size:14px;">
+        <tr style="border-bottom:1px solid #4a423e;">
+          <td style="padding:8px 0;color:#c9c0bb;">Transtornos mentais</td>
+          <td style="padding:8px 0;text-align:right;font-weight:bold;color:#f5f0ed;">1,1 bilhão</td>
+        </tr>
+        <tr style="border-bottom:1px solid #4a423e;">
+          <td style="padding:8px 0;color:#c9c0bb;">Transtornos de ansiedade</td>
+          <td style="padding:8px 0;text-align:right;font-weight:bold;color:#f5f0ed;">359 milhões</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0;color:#c9c0bb;">Depressão*</td>
+          <td style="padding:8px 0;text-align:right;font-weight:bold;color:#f5f0ed;">280 milhões</td>
+        </tr>
+      </table>
+      <p style="font-size:12px;margin-top:8px;">*A estimativa de depressão utilizada é de 2019.</p>
+    </div>
+
+    <p><strong style="color:var(--ink);">Cuidar da saúde mental não significa esperar chegar ao limite.</strong></p>
+    <p>Também significa se permitir olhar para dentro antes que o sofrimento ocupe todos os espaços da vida.</p>
+    <p style="font-size:12px;margin-top:24px;">Fonte: Organização Mundial da Saúde (WHO) — Mental disorders; Anxiety disorders</p>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona" class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Como funciona</div>
+    <h2>Começar pode ser mais simples do que parece.</h2>
+    <p>Você não precisa chegar à primeira sessão sabendo exatamente o que dizer.</p>
+    <p>O processo começa a partir do que você está vivendo hoje.</p>
+    <div class="steps">
+      <div class="step reveal">
+        <span class="step-num">01</span>
+        <h3 style="margin:0 0 8px;font-size:18px;">Agendamos uma primeira conversa</h3>
+        <p style="max-width:none;">Você entra em contato para encontrar um horário e entender como funciona o atendimento.</p>
+        <p style="max-width:none;">A primeira conversa é um momento para você apresentar o que está vivendo e conhecer o espaço terapêutico.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-num">02</span>
+        <h3 style="margin:0 0 8px;font-size:18px;">Entendemos o que você precisa</h3>
+        <p style="max-width:none;">A partir da escuta inicial, buscamos compreender sua história, suas necessidades e os principais pontos que trouxeram você até a terapia.</p>
+        <p style="max-width:none;">Não existe uma fórmula pronta. O processo é construído de acordo com cada pessoa.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-num">03</span>
+        <h3 style="margin:0 0 8px;font-size:18px;">Construímos o processo juntos</h3>
+        <p style="max-width:none;">Ao longo das sessões, trabalhamos os temas que fazem sentido para você, desenvolvendo novas formas de compreender emoções, pensamentos, relações e situações da vida.</p>
+      </div>
+    </div>
+    <p style="margin-top:32px;max-width:620px;"><strong style="color:var(--ink);">O objetivo não é mudar quem você é. É ampliar a forma como você pode se relacionar com quem você é.</strong></p>
+  </div>
+</section>
+
+<!-- CHECKLIST / IDENTIFICAÇÃO -->
+<section class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Talvez este seja o seu momento</div>
+    <h2>Você não precisa esperar tudo ficar difícil para procurar ajuda.</h2>
+    <p>Talvez você tenha chegado até aqui porque alguma coisa mudou.</p>
+    <p>Ou talvez esteja difícil explicar exatamente o que está acontecendo.</p>
+    <p>Alguns sinais podem indicar que está na hora de olhar para isso com mais cuidado:</p>
+    <ul class="checklist">
+      <li>Você sente que está constantemente preocupado(a).</li>
+      <li>Tem dificuldade para desacelerar a mente.</li>
+      <li>Sente que está emocionalmente sobrecarregado(a).</li>
+      <li>Percebe padrões que se repetem nos seus relacionamentos.</li>
+      <li>Está passando por uma mudança importante na vida.</li>
+      <li>Tem dificuldade para estabelecer limites ou dizer não.</li>
+      <li>Sente que perdeu a conexão com aquilo que antes fazia sentido.</li>
+      <li>Gostaria de se conhecer melhor e compreender suas próprias escolhas.</li>
+    </ul>
+    <a href="#cta-final" class="btn" style="margin-top:28px;display:inline-block;">Quero cuidar mais de mim</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="reveal">
+  <div class="wrap">
+    <div class="eyebrow">Dúvidas</div>
+    <h2>Antes de começar, algumas respostas.</h2>
+    <div>
+      <div class="faq-item open">
+        <div class="faq-q">Preciso estar passando por um problema grave para fazer terapia? <span>+</span></div>
+        <div class="faq-a">Não. A psicoterapia também pode ser um espaço de autoconhecimento, prevenção e reflexão. Você não precisa esperar chegar ao limite para buscar ajuda.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">O que acontece na primeira sessão? <span>+</span></div>
+        <div class="faq-a">A primeira sessão é principalmente um momento de conversa e escuta. Você poderá falar sobre o que motivou a busca pela terapia, enquanto conhecemos melhor sua história e suas necessidades.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Vou precisar falar sobre tudo logo no início? <span>+</span></div>
+        <div class="faq-a">Não. O processo acontece no seu ritmo. Não existe obrigação de falar sobre algo antes de se sentir preparado(a) para isso.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Quanto tempo dura o processo de terapia? <span>+</span></div>
+        <div class="faq-a">Não existe um prazo único. A duração depende dos objetivos, das necessidades e da evolução de cada pessoa ao longo do processo terapêutico.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">As sessões são online ou presenciais? <span>+</span></div>
+        <div class="faq-a">[DEFINIR CONFORME O MODELO REAL DE ATENDIMENTO DA ROBERTA] — exemplo caso seja online: os atendimentos são realizados de forma online, em um ambiente reservado e com privacidade, permitindo que você faça sua sessão de onde estiver.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="cta-final" class="final-cta reveal">
+  <div class="wrap">
+    <div class="eyebrow">Um primeiro passo</div>
+    <h2>Talvez você não precise encontrar todas as respostas agora.</h2>
+    <p>Mas pode começar criando um espaço para olhar para aquilo que está acontecendo.</p>
+    <p>Se você sente que chegou o momento de cuidar mais de si, vamos conversar.</p>
+    <a href="#" class="btn">Agendar minha consulta</a>
+    <p style="margin-top:20px;font-size:13px;"><strong style="color:var(--ink);">Um primeiro contato pode ser o começo de uma nova relação com você mesmo.</strong></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:16px;letter-spacing:2px;color:var(--ink);">ROBERTA MATOS</div>
+      <div style="font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:4px;">PSICÓLOGA</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#servicos">Atendimento</a></li>
+      <li><a href="#como-funciona">Como funciona</a></li>
+      <li><a href="#faq">Dúvidas</a></li>
+      <li><a href="#cta-final">Agendar consulta</a></li>
+    </ul>
+    <ul class="footer-links">
+      <li><a href="#">WhatsApp</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">E-mail</a></li>
+    </ul>
+    <div>
+      <div>Roberta Matos</div>
+      <div><em>[Inserir CRP real da Roberta]</em></div>
+    </div>
+    <div>© 2026 Roberta Matos. Todos os direitos reservados.</div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(function(q){
+    q.addEventListener('click', function(){
+      q.parentElement.classList.toggle('open');
+    });
+  });
+
+  var header = document.getElementById('site-header');
+  var cta = document.getElementById('pre-hero-cta');
+  var threshold = 120; // px do topo a partir do qual o CTA "ativa" o header
+
+  function toggleHeader(){
+    var ctaTop = cta.getBoundingClientRect().top;
+    if(ctaTop <= threshold){
+      header.classList.add('visible');
+    } else {
+      header.classList.remove('visible');
+    }
+  }
+
+  window.addEventListener('scroll', toggleHeader, {passive:true});
+  toggleHeader();
+
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var revealObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.15, rootMargin:'0px 0px -60px 0px'});
+    revealEls.forEach(function(el){ revealObserver.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+</script>
+
+</body>
+</html>
